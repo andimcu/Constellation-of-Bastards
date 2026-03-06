@@ -1,8 +1,7 @@
 {
-  "name": "Constellation of Bastards",
-  "description": "A responsive arcade-style experience for smashing bastards.",
+  "name": "Constellation of Bastards vF",
+  "description": "An interactive webcam game where you punch piñatas of the world's most infamous bastards.",
   "requestFramePermissions": [
-    "camera",
-    "microphone"
+    "camera"
   ]
 }
