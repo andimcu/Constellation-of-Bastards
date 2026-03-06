@@ -694,7 +694,7 @@ export default function App() {
                 CONSTELLATION<br/>OF BASTARDS
               </h1>
               <p className="font-mono text-xl md:text-2xl mb-12 text-arcade-pink uppercase tracking-widest font-bold">
-                A respite for the weary humans.
+                A respite for weary humans
               </p>
               <div className="space-y-8">
                 <button onClick={handleStart} className="arcade-button group">
