@@ -6,6 +6,36 @@ import { Camera, Info, X, ShieldAlert, Target, Rocket, Heart, User, Sparkles } f
 
 // --- Components ---
 
+const TechStars = () => {
+  const stars = useRef(Array.from({ length: 50 }).map(() => ({
+    top: `${Math.random() * 100}%`,
+    left: `${Math.random() * 100}%`,
+    size: Math.random() * 3 + 1,
+    delay: Math.random() * 5,
+    color: Math.random() > 0.7 ? '#ff00ff' : Math.random() > 0.4 ? '#00f2ff' : '#ffffff'
+  })));
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {stars.current.map((star, i) => (
+        <div
+          key={i}
+          className="absolute animate-glitch-star"
+          style={{
+            top: star.top,
+            left: star.left,
+            width: `${star.size}px`,
+            height: `${star.size}px`,
+            backgroundColor: star.color,
+            animationDelay: `${star.delay}s`,
+            boxShadow: `0 0 10px ${star.color}`
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
 const Header = ({ darkMode, onAbout }: { darkMode: boolean, onAbout: () => void }) => (
   <header className={`fixed top-0 left-0 right-0 z-50 p-4 flex justify-between items-center transition-colors duration-500 ${darkMode ? 'text-white' : 'text-black'}`}>
     <div className="font-mono text-xs md:text-sm tracking-tighter uppercase font-bold">
@@ -27,8 +57,10 @@ const LandingPage = ({ onStart }: { onStart: () => void }) => (
       animate={{ opacity: 1, y: 0 }}
       className="max-w-2xl"
     >
-      <h1 className="font-archivo text-5xl md:text-8xl mb-4 tracking-tight leading-none">
-        CONSTELLATION OF BASTARDS
+      <h1 className="font-archivo text-5xl md:text-8xl mb-6 tracking-tight leading-[0.9] uppercase italic flex flex-col items-center">
+        <span>CONSTELLATION</span>
+        <span>OF</span>
+        <span>BASTARDS</span>
       </h1>
       <p className="font-mono text-xl md:text-2xl mb-12 text-gray-600 italic">
         A respite for the weary humans.
@@ -514,10 +546,6 @@ const Arena = ({ bastard, onComplete }: { bastard: Bastard, onComplete: () => vo
               }}
             />
           ))}
-          <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-red-900/30 rounded-full blur-3xl" />
-          <div className="absolute bottom-[-10%] right-[-5%] w-[400px] h-[400px] bg-orange-600/20 rounded-full blur-2xl flex items-center justify-center">
-             <span className="text-9xl opacity-20">🔴</span>
-          </div>
         </div>
       )}
 
@@ -656,15 +684,16 @@ const ThankYou = ({ onRestart }: { onRestart: () => void }) => {
   }, []);
 
   return (
-    <div className="min-h-screen arcade-grid flex flex-col items-center justify-center p-6 text-center text-white">
+    <div className="min-h-screen arcade-grid flex flex-col items-center justify-center p-6 text-center text-white relative overflow-hidden">
+      <TechStars />
       <motion.div 
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="max-w-2xl bg-black/80 p-12 border-4 border-white shadow-[0_0_50px_rgba(255,0,255,0.2)] backdrop-blur-md"
+        className="max-w-4xl w-full bg-black/80 p-8 md:p-12 border-4 border-white shadow-[0_0_50px_rgba(255,0,255,0.2)] backdrop-blur-md relative z-10"
       >
-        <Sparkles className="mx-auto mb-8 text-arcade-pink animate-pulse" size={80} />
-        <h2 className="font-archivo text-4xl md:text-7xl mb-12 uppercase leading-tight neon-text-pink italic">
+        <Sparkles className="mx-auto mb-6 text-arcade-pink animate-pulse" size={64} />
+        <h2 className="font-archivo text-3xl md:text-6xl mb-8 uppercase leading-tight neon-text-pink italic">
           {affirmation}
         </h2>
         <button 
@@ -787,9 +816,10 @@ export default function App() {
       
       <AnimatePresence mode="wait">
         {gameState === 'landing' && (
-          <motion.div key="landing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="min-h-screen arcade-grid flex flex-col items-center justify-center p-6 text-center">
-            <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="max-w-4xl">
-              <h1 className="font-archivo text-6xl md:text-9xl mb-4 tracking-tighter leading-none neon-text italic">
+          <motion.div key="landing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="min-h-screen arcade-grid flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+            <TechStars />
+            <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="w-full max-w-4xl mx-auto relative z-10">
+              <h1 className="font-archivo text-6xl md:text-9xl mb-4 tracking-tighter leading-none neon-text italic text-center">
                 CONSTELLATION<br/>OF BASTARDS
               </h1>
               <p className="font-mono text-xl md:text-2xl mb-12 text-arcade-pink uppercase tracking-widest font-bold">
