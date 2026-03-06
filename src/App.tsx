@@ -721,6 +721,14 @@ export default function App() {
     if (saved) setHighScore(parseInt(saved));
   }, []);
 
+  useEffect(() => {
+    if (gameState === 'arena' || gameState === 'landing') {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [gameState]);
+
   const handleStart = async () => {
     setIsRequestingCamera(true);
     try {
@@ -788,31 +796,12 @@ export default function App() {
                 A respite for the weary humans.
               </p>
               <div className="space-y-8">
-                {!isRequestingCamera ? (
-                  <>
-                    <button onClick={handleStart} className="arcade-button group">
-                      <span className="group-hover:neon-text transition-all">READY TO SMASH A BASTARD?</span>
-                    </button>
-                    <p className="font-mono text-[10px] text-white/40 uppercase tracking-[0.3em]">
-                      requires a webcam, a fist, and some righteous anger
-                    </p>
-                  </>
-                ) : (
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="p-8 border-4 border-arcade-blue bg-black shadow-[0_0_30px_rgba(0,242,255,0.2)]"
-                  >
-                    <p className="font-mono text-xl md:text-2xl text-white uppercase tracking-tighter leading-tight">
-                      Turn on your camera.<br/>
-                      Make a fist.<br/>
-                      Get ready to punch.
-                    </p>
-                    <div className="mt-4 flex justify-center">
-                      <div className="w-12 h-1 bg-arcade-blue animate-pulse" />
-                    </div>
-                  </motion.div>
-                )}
+                <button onClick={handleStart} className="arcade-button group">
+                  <span className="group-hover:neon-text transition-all">READY TO SMASH A BASTARD?</span>
+                </button>
+                <p className="font-mono text-[10px] text-white/40 uppercase tracking-[0.3em]">
+                  requires a webcam, a fist, and some righteous anger
+                </p>
               </div>
             </motion.div>
           </motion.div>
@@ -892,6 +881,39 @@ export default function App() {
         {gameState === 'thanks' && (
           <motion.div key="thanks" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ThankYou onRestart={handleRestart} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isRequestingCamera && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }} 
+            className="fixed inset-0 z-[300] bg-black/90 backdrop-blur-md flex items-center justify-center p-6"
+          >
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }} 
+              animate={{ scale: 1, opacity: 1 }} 
+              exit={{ scale: 0.8, opacity: 0 }}
+              className="max-w-md w-full p-12 border-4 border-arcade-blue bg-black shadow-[0_0_50px_rgba(0,242,255,0.3)] text-center"
+            >
+              <div className="mb-8 flex justify-center">
+                <Camera className="text-arcade-blue animate-pulse" size={48} />
+              </div>
+              <h2 className="font-archivo text-3xl md:text-4xl text-white uppercase tracking-tighter leading-none mb-6 neon-text">
+                SYSTEM<br/>INITIALIZING
+              </h2>
+              <p className="font-mono text-xl text-white uppercase tracking-widest leading-relaxed">
+                Turn on your camera.<br/>
+                Make a fist.<br/>
+                Get ready to punch.
+              </p>
+              <div className="mt-10 flex justify-center">
+                <div className="w-24 h-1 bg-arcade-blue animate-pulse" />
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

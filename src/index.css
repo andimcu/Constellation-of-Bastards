@@ -9,7 +9,7 @@
 
 @layer base {
   body {
-    @apply font-mono antialiased overflow-hidden bg-black text-white;
+    @apply font-mono antialiased overflow-x-hidden bg-black text-white;
   }
 }
 
