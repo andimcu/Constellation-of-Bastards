@@ -36,136 +36,6 @@ const TechStars = () => {
   );
 };
 
-const Header = ({ darkMode, onAbout }: { darkMode: boolean, onAbout: () => void }) => (
-  <header className={`fixed top-0 left-0 right-0 z-50 p-4 flex justify-between items-center transition-colors duration-500 ${darkMode ? 'text-white' : 'text-black'}`}>
-    <div className="font-mono text-xs md:text-sm tracking-tighter uppercase font-bold">
-      Constellation of Bastards
-    </div>
-    <button 
-      onClick={onAbout}
-      className="font-mono text-xs hover:underline cursor-pointer opacity-70 hover:opacity-100 transition-opacity"
-    >
-      [ABOUT]
-    </button>
-  </header>
-);
-
-const LandingPage = ({ onStart }: { onStart: () => void }) => (
-  <div className="min-h-screen bg-[#E6E9EF] flex flex-col items-center justify-center p-6 text-center">
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="max-w-2xl"
-    >
-      <h1 className="font-archivo text-5xl md:text-8xl mb-6 tracking-tight leading-[0.9] uppercase italic flex flex-col items-center">
-        <span>CONSTELLATION</span>
-        <span>OF</span>
-        <span>BASTARDS</span>
-      </h1>
-      <p className="font-mono text-xl md:text-2xl mb-12 text-gray-600 italic">
-        A respite for the weary humans.
-      </p>
-      <button 
-        onClick={onStart}
-        className="bg-black text-white font-mono px-8 py-4 text-xl hover:bg-gray-800 transition-all transform hover:scale-105 active:scale-95 shadow-xl"
-      >
-        READY TO SMASH A BASTARD?
-      </button>
-      <p className="font-mono text-xs mt-8 text-gray-400 uppercase tracking-widest">
-        requires a webcam, a fist, and some righteous anger
-      </p>
-    </motion.div>
-  </div>
-);
-
-const SelectionGallery = ({ onSelect }: { onSelect: (b: Bastard) => void }) => {
-  const [filter, setFilter] = useState<Category>(Category.ALL);
-  const [selectedBastard, setSelectedBastard] = useState<Bastard | null>(null);
-
-  const filteredRoster = ROSTER.filter(b => filter === Category.ALL || b.category === filter);
-
-  return (
-    <div className="min-h-screen bg-[#E6E9EF] pt-24 pb-12 px-6">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="font-archivo text-4xl md:text-6xl mb-8 text-center uppercase">
-          Choose Your Bastard
-        </h2>
-        
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
-          {Object.values(Category).map(cat => (
-            <button
-              key={cat}
-              onClick={() => setFilter(cat)}
-              className={`font-mono text-xs px-4 py-2 border transition-all ${
-                filter === cat 
-                  ? 'bg-[#0055FF] text-white border-[#0055FF]' 
-                  : 'bg-white text-black border-black/10 hover:border-black'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-8 gap-4">
-          {filteredRoster.map(bastard => (
-            <motion.div
-              layoutId={bastard.id}
-              key={bastard.id}
-              onClick={() => setSelectedBastard(bastard)}
-              className="bg-white p-4 border border-black/5 hover:border-[#0055FF] cursor-pointer transition-all group relative overflow-hidden aspect-square flex flex-col items-center justify-center text-center"
-            >
-              <span className="text-4xl mb-2 group-hover:scale-125 transition-transform">
-                {bastard.pinataEmoji}
-              </span>
-              <span className="font-mono text-[10px] leading-tight uppercase font-bold">
-                {bastard.name}
-              </span>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {selectedBastard && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white max-w-md w-full p-8 shadow-2xl border-4 border-black"
-            >
-              <h3 className="font-archivo text-3xl mb-2 uppercase leading-none">
-                {selectedBastard.name}
-              </h3>
-              <p className="font-mono text-sm text-gray-500 mb-6 uppercase tracking-tighter">
-                {selectedBastard.category}
-              </p>
-              <div className="font-mono text-lg mb-8 border-l-4 border-[#0055FF] pl-4 py-2">
-                {selectedBastard.description}
-              </div>
-              <div className="flex gap-4">
-                <button 
-                  onClick={() => onSelect(selectedBastard)}
-                  className="flex-1 bg-black text-white font-mono py-4 hover:bg-gray-800 transition-colors uppercase font-bold"
-                >
-                  Confirm Smash
-                </button>
-                <button 
-                  onClick={() => setSelectedBastard(null)}
-                  className="px-6 border-2 border-black font-mono hover:bg-black hover:text-white transition-all"
-                >
-                  <X size={24} />
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
-
 const BoxingGlove = ({ side, velocity }: { side: 'Left' | 'Right', velocity: number }) => {
   const isRight = side === 'Right';
   return (
@@ -796,14 +666,15 @@ export default function App() {
       <div className="scanlines" />
       
       {gameState !== 'landing' && (
-        <header className="fixed top-0 left-0 right-0 z-50 p-4 flex justify-between items-center bg-black/80 border-b border-white/10 backdrop-blur-sm">
-          <div className="font-archivo text-sm md:text-xl tracking-tighter uppercase font-bold neon-text">
+        <header className="fixed top-0 left-0 right-0 z-50 p-4 grid grid-cols-3 items-center bg-black/80 border-b border-white/10 backdrop-blur-sm">
+          <div className="hidden md:block font-mono text-[10px] uppercase text-arcade-blue">
+            Bastards Smashed: <span className="text-white font-bold">{highScore}</span>
+          </div>
+          <div className="md:hidden" />
+          <div className="font-archivo text-[3.5vw] sm:text-sm md:text-xl tracking-tighter uppercase font-bold neon-text text-center">
             CONSTELLATION OF BASTARDS
           </div>
-          <div className="flex items-center gap-6">
-            <div className="hidden md:block font-mono text-[10px] uppercase text-arcade-blue">
-              Bastards Smashed: <span className="text-white font-bold">{highScore}</span>
-            </div>
+          <div className="flex justify-end items-center">
             <button 
               onClick={() => setShowAbout(true)}
               className="font-mono text-xs hover:text-arcade-pink cursor-pointer transition-colors border border-white/20 px-2 py-1"
@@ -818,8 +689,8 @@ export default function App() {
         {gameState === 'landing' && (
           <motion.div key="landing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="min-h-screen arcade-grid flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
             <TechStars />
-            <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="w-full max-w-4xl mx-auto relative z-10">
-              <h1 className="font-archivo text-6xl md:text-9xl mb-4 tracking-tighter leading-none neon-text italic text-center">
+            <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="w-full max-w-4xl mx-auto relative z-10 flex flex-col items-center">
+              <h1 className="font-archivo text-[12vw] sm:text-8xl md:text-9xl mb-4 tracking-tighter leading-none neon-text italic text-center">
                 CONSTELLATION<br/>OF BASTARDS
               </h1>
               <p className="font-mono text-xl md:text-2xl mb-12 text-arcade-pink uppercase tracking-widest font-bold">
