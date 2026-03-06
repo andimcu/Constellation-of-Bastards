@@ -614,6 +614,9 @@ export default function App() {
   const [showAbout, setShowAbout] = useState(false);
   const [highScore, setHighScore] = useState(0);
   const [isRequestingCamera, setIsRequestingCamera] = useState(false);
+  const [filter, setFilter] = useState<Category>(Category.ALL);
+
+  const filteredRoster = ROSTER.filter(b => filter === Category.ALL || b.category === filter);
 
   useEffect(() => {
     const saved = localStorage.getItem('bastards_smashed');
@@ -719,8 +722,12 @@ export default function App() {
                 {Object.values(Category).map(cat => (
                   <button
                     key={cat}
-                    onClick={() => {}} // Filter logic handled in SelectionGallery component if it were separate, but here it's inline in the original. I'll keep it simple.
-                    className="font-mono text-[10px] px-4 py-1 border-2 border-white/20 hover:border-arcade-blue hover:text-arcade-blue transition-all uppercase"
+                    onClick={() => setFilter(cat)}
+                    className={`font-mono text-[10px] px-4 py-2 border-2 transition-all uppercase cursor-pointer ${
+                      filter === cat 
+                        ? 'bg-arcade-blue text-black border-white shadow-[2px_2px_0px_#ff00ff]' 
+                        : 'bg-black text-white border-white/40 hover:border-white hover:shadow-[2px_2px_0px_#00f2ff]'
+                    }`}
                   >
                     {cat}
                   </button>
@@ -728,7 +735,7 @@ export default function App() {
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-8 gap-4">
-                {ROSTER.map(bastard => (
+                {filteredRoster.map(bastard => (
                   <motion.div
                     key={bastard.id}
                     onClick={() => setSelectedBastard(bastard)}
@@ -762,7 +769,10 @@ export default function App() {
                       <button onClick={() => handleSelect(selectedBastard)} className="arcade-button w-full">
                         Fists clenched? Let's go!
                       </button>
-                      <button onClick={() => setSelectedBastard(null)} className="font-mono text-xs text-white/40 hover:text-white uppercase tracking-widest">
+                      <button 
+                        onClick={() => setSelectedBastard(null)} 
+                        className="font-mono text-xs text-white/60 hover:text-white uppercase tracking-widest border border-white/20 hover:border-white px-4 py-2 transition-all cursor-pointer"
+                      >
                         [ BACK TO ROSTER ]
                       </button>
                     </div>
